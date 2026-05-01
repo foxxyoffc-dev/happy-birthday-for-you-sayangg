@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Surprise for You ❤️</title>
+    <!-- Import Font Aesthetic -->
+    <link href="https://googleapis.com" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Courier Prime', monospace; background: #000; color: white; overflow-x: hidden; }
+
+        /* Background Video Utama */
+        #bg-video-main {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; z-index: -2;
+        }
+
+        /* Overlay Hujan (Aktif setelah login) */
+        #overlay-rain {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1; display: none;
+            mix-blend-mode: screen; opacity: 0.5;
+        }
+
+        .screen {
+            display: none; height: 100vh; width: 100%;
+            flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 20px; position: relative;
+        }
+
+        .active { display: flex; }
+
+        /* Amplop Password */
+        .envelope-wrapper {
+            background: #ffb6c1; width: 220px; height: 150px;
+            position: relative; border-radius: 10px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.3s;
+        }
+        .envelope-wrapper::before {
+            content: ''; position: absolute; top: 0; border-left: 110px solid transparent;
+            border-right: 110px solid transparent; border-top: 80px solid #ff8fa3;
+        }
+        .pw-input-style {
+            background: white; border: none; width: 80%; padding: 8px;
+            text-align: center; border-radius: 5px; font-family: sans-serif;
+            position: relative; z-index: 2; outline: none;
+        }
+
+        /* Font Lirik Aesthetic & Blending */
+        #lirik-box { 
+            font-family: 'Dancing Script', cursive; 
+            font-size: 2.2rem; min-height: 120px; line-height: 1.4; color: #fff;
+            text-shadow: 2px 2px 15px rgba(0,0,0,0.8);
+            transition: opacity 0.8s ease-in-out;
+        }
+
+        /* Gallery Memory */
+        .memories { 
+            display: flex; gap: 15px; margin: 30px 0; 
+            flex-wrap: wrap; justify-content: center; 
+            max-width: 800px;
+        }
+        .memories img { 
+            width: 120px; height: 120px; object-fit: cover; 
+            border-radius: 15px; opacity: 0; border: 3px solid white;
+            transform: scale(0.8); transition: all 1.5s ease; 
+        }
+
+        /* Pesan Penutup Lucu */
+        .typewriter {
+            font-family: 'Caveat', cursive; font-size: 1.8rem;
+            max-width: 600px; line-height: 1.3; color: #ffb6c1;
+        }
+        #kata-penutup {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem; color: white; margin-top: 20px;
+        }
+
+        .circle-video {
+            width: 180px; height: 180px; border-radius: 50%;
+            overflow: hidden; border: 4px solid white; margin-bottom: 20px;
+        }
+        .circle-video video { width: 100%; height: 100%; object-fit: cover; }
+
+        .vinyl-container {
+            position: fixed; top: 20px; right: 20px; width: 80px; height: 80px;
+            animation: spin 4s linear infinite; display: none;
+        }
+        .vinyl-container img { width: 100%; border-radius: 50%; }
+        @keyframes spin { from {transform: rotate(0deg);} to {transform: rotate(360deg);} }
+
+        button {
+            padding: 12px 25px; border-radius: 25px; border: none;
+            background: white; color: black; font-weight: bold; cursor: pointer;
+            margin-top: 20px; font-family: 'Courier Prime', monospace;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .watermark {
+            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
+            font-size: 0.7rem; color: white; opacity: 0.9; z-index: 10;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Utama -->
+    <video id="bg-video-main" autoplay muted loop playsinline>
+        <source src="https://d.uguu.se/zmwtGjDV.mp4" type="video/mp4">
+    </video>
+
+    <!-- Overlay Hujan -->
+    <video id="overlay-rain" autoplay muted loop playsinline>
+        <source src="https://h.uguu.se/OXlRlQVa.mp4" type="video/mp4">
+    </video>
+
+    <audio id="lagu-monokrom">
+        <source src="https://h.uguu.se/NTNPmVsj.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 1. Screen Login -->
+    <div id="screen-login" class="screen active">
+        <div class="envelope-wrapper">
+            <input type="text" id="password-input" class="pw-input-style" placeholder="Password?">
+        </div>
+        <div id="login-msg" style="margin-top: 15px; color: #ff6b6b; font-size: 0.9rem; font-weight: bold;"></div>
+        <button onclick="checkPassword()">Pw nya awal kita chat an yaa sayaangg🥰</button>
+    </div>
+
+    <!-- 2. Screen Chibi -->
+    <div id="screen-chibi" class="screen">
+        <div class="circle-video">
+            <video autoplay muted loop playsinline>
+                <source src="https://o.uguu.se/OMnYuGDc.mp4" type="video/mp4">
+            </video>
+        </div>
+        <p style="font-family: 'Dancing Script'; font-size: 1.8rem;">Ready for your birthday surprise?</p>
+        <button onclick="startSurprise()">Klik Di Sini ✨</button>
+    </div>
+
+    <!-- 3. Screen Lirik -->
+    <div id="screen-lirik" class="screen">
+        <div class="vinyl-container" id="vinyl">
+            <img src="https://img2.pixhost.to/images/7568/720854913_alip-1777590800317.png" alt="vinyl">
+        </div>
+        <div id="lirik-box"></div>
+        <button id="btn-next-final" style="display: none;" onclick="goFinal()">Ke sini princess ❤️</button>
+    </div>
+
+    <!-- 4. Screen Final (Memory Section) -->
+    <div id="screen-final" class="screen">
+        <div id="text-ketik" class="typewriter"></div>
+        
+        <!-- BAGIAN MEMORY/PHOTO -->
+        <div class="memories" id="photo-box">
+            <img src="https://img2.pixhost.to/images/7569/720870226_alip-1777595093070.jpg" alt="Memory 1">
+            <img src="https://img2.pixhost.to/images/7569/720870260_alip-1777595107019.jpg" alt="Memory 2">
+            <img src="https://img2.pixhost.to/images/7569/720870309_alip-1777595120068.jpg" alt="Memory 3">
+            <img src="https://img2.pixhost.to/images/7569/720870344_alip-1777595134384.jpg" alt="Memory 4">
+        </div>
+
+        <div id="kata-penutup" style="opacity: 0;">
+            Always Be Yours, Forever... 💍
+        </div>
+    </div>
+
+    <div class="watermark">Website Code By Foxxy [Your Fineshyt]😋</div>
+
+    <script>
+        const passBenar = "06022026"; 
+
+        function checkPassword() {
+            const input = document.getElementById('password-input').value;
+            const msg = document.getElementById('login-msg');
+            
+            if(input === passBenar) {
+                document.getElementById('overlay-rain').style.display = 'block'; 
+                nextScreen('screen-login', 'screen-chibi');
+            } else {
+                msg.innerText = "Masa lupa passwordnya? 🥺";
+            }
+        }
+
+        function nextScreen(hideId, showId) {
+            document.getElementById(hideId).classList.remove('active');
+            document.getElementById(showId).classList.add('active');
+        }
+
+        function startSurprise() {
+            nextScreen('screen-chibi', 'screen-lirik');
+            document.getElementById('lagu-monokrom').play();
+            document.getElementById('vinyl').style.display = 'block';
+            mulaiLirik();
+        }
+
+        const lirik = [
+            { t: 1, text: "Happy Birthday Sayangg🥳" },
+            { t: 4, text: "Tunggu sampe selesai yaa, cuma 1 menit kokk lirik nyaa" },
+            { t: 22, text: "Lembaran foto hitam putih..." },
+            { t: 26, text: "Aku coba ingat lagi warna bajumu kala itu..." },
+            { t: 32, text: "Kali pertama di hidupku..." },
+            { t: 37, text: "Manusia lain memelukku..." },
+            { t: 43, text: "Lembaran foto hitam putih..." },
+            { t: 47, text: "Aku coba ingat lagi wangi rumah di sore itu..." },
+            { t: 55, text: "Kue coklat, balon warna-warni" },
+            { t: 59, text: "Pesta hari ulang tahunku...." }
+        ];
+
+        function mulaiLirik() {
+            const lirikBox = document.getElementById('lirik-box');
+            lirik.forEach((line) => {
+                setTimeout(() => {
+                    lirikBox.style.opacity = 0; // Fade out
+                    setTimeout(() => {
+                        lirikBox.innerText = "";
+                        lirikBox.style.opacity = 1; // Fade in
+                        typeEffect(line.text, 'lirik-box', 0);
+                    }, 800);
+                }, line.t * 1000);
+            });
+
+            setTimeout(() => {
+                document.getElementById('btn-next-final').style.display = 'block';
+            }, 55000); 
+        }
+
+        function typeEffect(text, elementId, i) {
+            if (i < text.length) {
+                document.getElementById(elementId).innerHTML += text.charAt(i);
+                setTimeout(() => typeEffect(text, elementId, i + 1), 60);
+            }
+        }
+
+        function goFinal() {
+            nextScreen('screen-lirik', 'screen-final');
+            ketikTeksFinal("Selamat ulang tahun sayaangg✨️... \nSemoga semua mimpi kamu terwujud, semogaa kamuu tetep sayaangg akuu selamanyaa yaa sayaangg, maaf kaloo mungkin ini jelek, akuu udah nyoba sebaik mungkin sayaangg, intinyaa kamu tetep jagaa kesehatan yaa sayaangg, semogaa ajaa kita emang bener-bener bisa bareng sampe akhirat nanti dengan status ber suami-istri kedepannya yaa sayaangg, akuu bener-bener serius sama kamuu akuu berharap kamuu juga nerima aku apa adanyaa yaa, maaf jugaa kalo semisal akuu banyak salah dan kurangnya, aku coba bakal jadi lebih baik lagii yaa sayaangg, selalu jujur sama aku yaa, karena kunci dari suatu hubungan adalah SALING PERCAYA🥰  ", "text-ketik");
+        }
+
+        function ketikTeksFinal(teks, id) {
+            let i = 0;
+            const target = document.getElementById(id);
+            function type() {
+                if (i < teks.length) {
+                    target.innerHTML += teks.charAt(i);
+                    i++;
+                    setTimeout(type, 80);
+                } else {
+                    tampilkanMemory();
+                }
+            }
+            type();
+        }
+
+        function tampilkanMemory() {
+            const imgs = document.querySelectorAll('.memories img');
+            imgs.forEach((img, index) => {
+                setTimeout(() => {
+                    img.style.opacity = '1';
+                    img.style.transform = 'scale(1) rotate(' + (index % 2 === 0 ? '-3deg' : '3deg') + ')';
+                    
+                    if(index === imgs.length - 1) {
+                        setTimeout(() => {
+                            document.getElementById('kata-penutup').style.opacity = '1';
+                            document.getElementById('kata-penutup').style.transition = '3s';
+                        }, 1000);
+                    }
+                }, (index + 1) * 1000);
+            });
+        }
+    </script>
+</body>
+</html>
